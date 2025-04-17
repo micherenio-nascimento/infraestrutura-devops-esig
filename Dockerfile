@@ -18,6 +18,14 @@ RUN apt-get update && \
 
 RUN sed -i 's/8080/9190/g' /usr/local/tomcat/conf/server.xml
 
-EXPOSE 9190
+EXPOSE 9190 9010
 
-CMD ["java", "-jar", "/usr/local/tomcat/webapps/jenkins.war", "--httpPort=9190"]
+CMD ["sh", "-c", "java \
+  -Dcom.sun.management.jmxremote \
+  -Dcom.sun.management.jmxremote.port=9010 \
+  -Dcom.sun.management.jmxremote.rmi.port=9010 \
+  -Dcom.sun.management.jmxremote.authenticate=false \
+  -Dcom.sun.management.jmxremote.ssl=false \
+  -Djava.rmi.server.hostname=jenkins \
+  -jar /usr/local/tomcat/webapps/jenkins.war \
+  --httpPort=9190"]

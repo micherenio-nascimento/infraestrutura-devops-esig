@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   jenkins:
     build:
@@ -8,6 +6,21 @@ services:
     container_name: jenkins
     ports:
       - "9190:9190"
+      - "9010:9010" 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
+
+  jolokia:
+    image: balaclavalab/jolokia
+    container_name: jolokia
+    ports:
+      - "8778:8080"
+    environment:
+      - JOLOKIA_DISCOVERY_ENABLED=false
+      - JOLOKIA_TARGET_URL=service:jmx:rmi:///jndi/rmi://jenkins:9010/jmxrmi
+    depends_on:
+      - jenkins
+
+
+
