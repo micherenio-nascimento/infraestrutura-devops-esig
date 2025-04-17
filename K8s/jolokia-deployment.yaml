@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jolokia
+  namespace: esig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jolokia
+  template:
+    metadata:
+      labels:
+        app: jolokia
+    spec:
+      containers:
+        - name: jolokia
+          image: balaclavalab/jolokia
+          ports:
+            - containerPort: 8080
+          env:
+            - name: JOLOKIA_DISCOVERY_ENABLED
+              value: "false"
+            - name: JOLOKIA_TARGET_URL
+              value: "service:jmx:rmi:///jndi/rmi://jenkins:9010/jmxrmi"
